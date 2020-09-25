@@ -1,0 +1,84 @@
+//
+// _theming.scss — mbp-rolls-client
+// ~/src/styles
+//
+
+@use '~@angular/material/theming' as ng;
+
+@mixin apply-theme($theme) {
+	$primary: map-get($theme, primary);
+	$accent: map-get($theme, accent);
+	$warn: map-get($theme, warn);
+	$foreground: map-get($theme, foreground);
+	$background: map-get($theme, background);
+	$is-dark: map-get($theme, is-dark);
+
+	body {
+		color: ng.mat-color($foreground, text);
+		background: ng.mat-color($background, background);
+	}
+
+	a {
+		color: ng.mat-color($primary);
+	}
+
+	.mat-button, .mat-raised-button, .mat-stroked-button, .mat-flat-button {
+		.mat-icon {
+			&:first-child {
+				margin-right: 0.5rem;
+			}
+
+			&:last-child {
+				margin-left: 0.5rem;
+			}
+		}
+	}
+}
+
+@mixin core() {
+	:root {
+		font-size: 100%;
+	}
+
+	*, *::before, *::after {
+		box-sizing: border-box;
+	}
+
+	html, body {
+		height: 100%;
+	}
+
+	body {
+		margin: 0;
+		font-size: 1rem;
+		font-family: Roboto, "Helvetica Neue", sans-serif;
+		line-height: 1.5;
+	}
+
+	main {
+		padding: 1rem;
+	}
+
+	p {
+		margin: 0 0 1rem;
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
+
+	a {
+		text-decoration: none;
+
+		&[target="_blank"] .mat-icon {
+			top: 0;
+			right: 0;
+			width: 1em;
+			height: 1em;
+			margin-left: 0.125em;
+			font-size: 100%;
+			line-height: 1;
+			vertical-align: middle;
+		}
+	}
+}

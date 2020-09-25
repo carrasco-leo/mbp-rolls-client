@@ -1,0 +1,37 @@
+//
+// styles.scss — mbp-rolls-client
+// ~/src
+//
+
+@use '~@angular/material/theming' as *;
+@use 'styles/theming' as main;
+@use 'app/theming' as app;
+
+@include mat-core();
+@include main.core();
+
+$dark-theme: mat-dark-theme(
+	mat-palette($mat-indigo),
+	mat-palette($mat-pink, A200, A100, A400),
+	mat-palette($mat-red)
+);
+
+$light-theme: mat-light-theme(
+	mat-palette($mat-indigo),
+	mat-palette($mat-pink, A200, A100, A400),
+	mat-palette($mat-red)
+);
+
+@mixin apply-theme($theme) {
+	@include angular-material-theme($theme);
+	@include main.apply-theme($theme);
+	@include app.apply-theme($theme);
+}
+
+html[data-theme="dark"], html:not([data-theme]) {
+	@include apply-theme($dark-theme);
+}
+
+html[data-theme="light"] {
+	@include apply-theme($light-theme);
+}

@@ -1,0 +1,14 @@
+//
+// app.component.scss — mbp-rolls-client
+// ~/src/app
+//
+
+@use '~@angular/material/theming' as ng;
+
+.app-toolbar {
+	@include ng.mat-elevation(4);
+}
+
+.app-flex-auto {
+	flex: auto;
+}
