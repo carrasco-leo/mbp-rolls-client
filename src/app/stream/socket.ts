@@ -20,7 +20,7 @@ export abstract class Socket {
 		readonly protocols?: string|string[],
 	) {}
 
-	connect(host: string, port: number): Promise<void> {
+	connect(address: string): Promise<void> {
 		if (this.state === 'open') {
 			return Promise.reject(new Error('Already connected to a server'));
 		} else if (this.state === 'pending') {
@@ -30,7 +30,7 @@ export abstract class Socket {
 		return new Promise((resolve, reject) => {
 			try {
 				this.state = 'pending';
-				this.$socket = this._createSocket(host, port);
+				this.$socket = this._createSocket(address);
 				this._messageListener();
 				this._openListener();
 				this._closeListener();
@@ -54,9 +54,9 @@ export abstract class Socket {
 		this.$socket.send(JSON.stringify(data));
 	}
 
-	protected _createSocket(host: string, port: number) {
+	protected _createSocket(address: string) {
 		const protocol = (this.secured) ? 'wss' : 'ws';
-		return new WebSocket(protocol+'://' + host + ':' + port, this.protocols);
+		return new WebSocket(protocol+'://' + address, this.protocols);
 	}
 
 	protected _messageListener() {
