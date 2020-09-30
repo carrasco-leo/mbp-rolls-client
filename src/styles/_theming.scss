@@ -21,6 +21,16 @@
 	a {
 		color: ng.mat-color($primary);
 	}
+
+	.mat-snack-bar-container {
+		color: ng.mat-color($foreground, text);
+		background: ng.mat-color($background, card);
+
+		&.mat-error {
+			color: ng.mat-contrast($warn, 500);
+			background: ng.mat-color($warn, 500);
+		}
+	}
 }
 
 @mixin core() {
@@ -63,7 +73,6 @@
 			right: 0;
 			width: 1em;
 			height: 1em;
-			margin-left: 0.125em;
 			font-size: 100%;
 			line-height: 1;
 			vertical-align: middle;

@@ -11,14 +11,14 @@
 @include main.core();
 
 $dark-theme: mat-dark-theme(
-	mat-palette($mat-indigo),
 	mat-palette($mat-pink, A200, A100, A400),
+	mat-palette($mat-indigo),
 	mat-palette($mat-red)
 );
 
 $light-theme: mat-light-theme(
-	mat-palette($mat-indigo),
 	mat-palette($mat-pink, A200, A100, A400),
+	mat-palette($mat-indigo),
 	mat-palette($mat-red)
 );
 

@@ -1,0 +1,25 @@
+//-
+//- not-connected.include.pug — mbp-rolls-client
+//- ~/src/app
+//-
+
+div.app-not-connected
+	h1.mat-headline Mythic Battles: Patheon RPG
+	p Adapted from the miniatures board game of the same name, #[b Mythic Battles: Pantheon™ RPG] invites players to portray mythical heroes returned from the Underworld — such as Odysseus, Achilles, Heracles, Atalanta, Andromeda or Penthesilea — or characters created from scratch, living in a Greece both ancient and post-apocalyptic. #[a(href="https://www.black-book-editions.fr/produit.php?id=4929", target="_blank") source #[mat-icon open_in_new]]
+
+	h2.mat-title Why this application?
+	p This RPG uses d6 rules with some subtleties.
+	ul
+		li The value `6` is used as a `0`
+		li You can discard dices to increase the value of any non-discarded dices other than `0`
+		li After the first discards, you can only once reroll dices of value of `5`
+		ul
+			li A new result of `0` set the dice to `0`; any other value is added to the previous value
+			li You can again discard dices to increase others
+		li Finaly, you check the dice pool with the difficulty to know if the roll pass or not
+
+	p It is quite easy and fast to handle with physical dices, but wasn't when using online means. This application is there to relieve this problem.
+
+	div.app-not-connected-actions
+		button(mat-raised-button, color="primary", (click)="openConnection()")
+			| Connect me to a Server

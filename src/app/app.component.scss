@@ -27,3 +27,28 @@
 		width: 1%;
 	}
 }
+
+.app-container {
+	display: flex;
+	flex-flow: row-reverse;
+	gap: 1rem;
+}
+
+.app-user-list {
+	width: 320px;
+	min-width: 320px;
+}
+
+.app-not-connected {
+	max-width: 768px;
+	margin: auto;
+
+	.mat-button-base {
+		text-transform: uppercase;
+	}
+}
+
+.app-not-connected-actions {
+	margin: 3rem 0 0;
+	text-align: center;
+}
