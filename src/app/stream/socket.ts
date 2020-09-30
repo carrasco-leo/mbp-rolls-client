@@ -85,8 +85,10 @@ export abstract class Socket {
 
 	protected _closeListener(reject: (error: any) => void) {
 		this.$socket.addEventListener('close', (event) => {
+			console.log('socket: close [%s]', this.state, event);
+
 			if (this.state === 'pending') {
-				reject(this._createCloseError(event));
+				reject(this._createCloseError(event.code, event.reason));
 			} else {
 				this.$events.next({
 					type: 'close',
@@ -101,12 +103,12 @@ export abstract class Socket {
 		});
 	}
 
-	protected _createCloseError(event: CloseEvent) {
-		if (event.reason) {
-			return new Error(event.reason);
+	protected _createCloseError(code: number, reason: string) {
+		if (reason) {
+			return new Error(reason);
 		}
 
-		switch (event.code) {
+		switch (code) {
 			case 1006:
 				return new Error((this.state === 'pending')
 					? 'Unable to connect to server'

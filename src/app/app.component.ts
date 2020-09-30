@@ -10,12 +10,14 @@ import {
 	OnDestroy,
 } from '@angular/core';
 
+import { MatSnackBar } from '@angular/material/snack-bar';
+
 import { Subject } from 'rxjs';
-import { takeUntil, map } from 'rxjs/operators';
+import { takeUntil, map, filter } from 'rxjs/operators';
 
 import { AppThemingService } from './app-theming.service';
 import { ConnectionDialog } from './connection-dialog';
-import { StreamService } from './stream';
+import { StreamService, StreamErrorEvent } from './stream';
 
 @Component({
 	selector:            'app-root',
@@ -31,10 +33,20 @@ export class AppComponent implements OnInit, OnDestroy {
 		public theming: AppThemingService,
 		private connection: ConnectionDialog,
 		public stream: StreamService,
+		private snackBar: MatSnackBar,
 	) {}
 
 	ngOnInit() {
 		this.theming.init();
+
+		this.stream.streamEvents
+			.pipe(takeUntil(this.ngUnsubscribe))
+			.pipe(filter(() => this.stream.isConnected))
+			.pipe(filter<StreamErrorEvent>((event) => event.type === 'error'))
+			.subscribe((event) => this.snackBar.open(event.reason, 'Dismiss', {
+				duration: 5000,
+				panelClass: 'mat-error',
+			}));
 	}
 
 	ngOnDestroy() {

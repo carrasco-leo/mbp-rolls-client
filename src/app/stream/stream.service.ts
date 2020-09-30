@@ -14,7 +14,7 @@ import { Subject } from 'rxjs';
 import { first, filter, map } from 'rxjs/operators';
 
 import { Socket } from './socket';
-import { StreamEvent, SocketMessageEvent } from './events';
+import { StreamEvent, StreamWelcomeEvent, SocketMessageEvent } from './events';
 
 export const STREAM_SECURED = new InjectionToken<boolean>('stream.secured');
 export const STREAM_PROTOCOLS = new InjectionToken<string|string[]>('stream.protocols');
@@ -22,11 +22,22 @@ export const STREAM_PROTOCOLS = new InjectionToken<string|string[]>('stream.prot
 @Injectable({ providedIn: 'root' })
 export class StreamService extends Socket {
 	private $streamEvents = new Subject<StreamEvent>();
-	private socketSubscription = this.events
-		.pipe(filter<SocketMessageEvent<StreamEvent>>((event) => {
-			return event.type === 'message';
-		}))
-		.subscribe((event) => this.$streamEvents.next(event.data));
+	private socketSubscription = this.events.subscribe((event) => {
+		if (event.type === 'message') {
+			this._handleMessage(event.data)
+		} else if (event.type === 'close') {
+			this.isConnected = false;
+
+			if (!event.wasClean) {
+				const error = this._createCloseError(event.code, event.reason);
+				this.$streamEvents.next({ type: 'error', reason: error.message });
+			}
+		} else if (event.type === 'error') {
+			if (this.state === 'open') {
+				this.$streamEvents.next(event);
+			}
+		}
+	});
 
 	get streamEvents() { return this.$streamEvents.asObservable(); }
 
@@ -46,10 +57,12 @@ export class StreamService extends Socket {
 			.toPromise()
 			.then((event) => {
 				if (event.type === 'error') {
+					this.disconnect();
+
 					throw new Error(event.reason);
 				}
 
-				return event;
+				return event as StreamWelcomeEvent;
 			})
 
 		return this.connect(address)
@@ -70,5 +83,24 @@ export class StreamService extends Socket {
 		this.users = {};
 		this.id = null;
 		this.username = null;
+	}
+
+	protected _handleMessage(event: StreamEvent) {
+		switch (event.type) {
+			case 'welcome': break;
+
+			case 'connection':
+				this.users[event.id] = event.username;
+				break;
+
+			case 'disconnection':
+				delete this.users[event.id];
+				break;
+
+			case 'error':
+				break;
+		}
+
+		this.$streamEvents.next(event);
 	}
 }

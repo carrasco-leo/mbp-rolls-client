@@ -42,7 +42,20 @@ export interface StreamErrorEvent {
 	reason: string;
 }
 
+export interface StreamConnectionEvent {
+	type: 'connection';
+	id: string;
+	username: string;
+}
+
+export interface StreamDisconnectionEvent {
+	type: 'disconnection';
+	id: string;
+}
+
 export type StreamEvent =
 	StreamWelcomeEvent
 	|StreamErrorEvent
+	|StreamConnectionEvent
+	|StreamDisconnectionEvent
 	;
