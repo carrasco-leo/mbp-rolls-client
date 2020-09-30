@@ -4,6 +4,14 @@
 //-
 
 mat-toolbar.app-toolbar
+	button(*ngIf="!stream.isConnected", mat-button, (click)="openConnection()")
+		mat-icon login
+		span Connect
+
+	button(*ngIf="stream.isConnected", mat-button, (click)="stream.disconnect()")
+		mat-icon power_settings_new
+		span Disconnect
+
 	.app-flex-auto
 
 	mat-slide-toggle(

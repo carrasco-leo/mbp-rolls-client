@@ -14,6 +14,8 @@ import { Subject } from 'rxjs';
 import { takeUntil, map } from 'rxjs/operators';
 
 import { AppThemingService } from './app-theming.service';
+import { ConnectionDialog } from './connection-dialog';
+import { StreamService } from './stream';
 
 @Component({
 	selector:            'app-root',
@@ -27,6 +29,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
 	constructor(
 		public theming: AppThemingService,
+		private connection: ConnectionDialog,
+		public stream: StreamService,
 	) {}
 
 	ngOnInit() {
@@ -36,5 +40,9 @@ export class AppComponent implements OnInit, OnDestroy {
 	ngOnDestroy() {
 		this.ngUnsubscribe.next();
 		this.ngUnsubscribe.complete();
+	}
+
+	openConnection() {
+		this.connection.open();
 	}
 }

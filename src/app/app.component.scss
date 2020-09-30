@@ -7,8 +7,23 @@
 
 .app-toolbar {
 	@include ng.mat-elevation(4);
+
+	.mat-button {
+		text-transform: uppercase;
+	}
 }
 
 .app-flex-auto {
 	flex: auto;
+}
+
+.app-form-fields {
+	display: flex;
+	align-items: flex-start;
+	gap: 1rem;
+
+	.mat-form-field {
+		flex: auto;
+		width: 1%;
+	}
 }

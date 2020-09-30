@@ -1,0 +1,26 @@
+//-
+//- connection-dialog.component.pug — mbp-rolls-client
+//- ~/src/app/connection-dialog
+//-
+
+div.connection-dialog-connecting-spinner
+	mat-progress-spinner(mode="indeterminate")
+
+h1(mat-dialog-title) Connection to Server
+form((ngSubmit)="submit()")
+	mat-dialog-content
+		p.mat-error(*ngIf="error") {{ error }}
+
+		div.app-form-fields
+			mat-form-field
+				mat-label Address
+				input(matInput, type="text", name="address", [(ngModel)]="address")
+
+		div.app-form-fields
+			mat-form-field
+				mat-label Username
+				input(matInput, type="text", name="username", [(ngModel)]="username")
+
+	mat-dialog-actions(align="end")
+		button(mat-button, type="button", mat-dialog-close) Cancel
+		button(mat-button, [disabled]="disableSubmit") Login

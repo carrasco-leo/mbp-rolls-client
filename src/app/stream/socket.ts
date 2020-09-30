@@ -29,11 +29,11 @@ export abstract class Socket {
 
 		return new Promise((resolve, reject) => {
 			try {
-				this.state = 'pending';
 				this.$socket = this._createSocket(address);
+				this.state = 'pending';
 				this._messageListener();
-				this._openListener();
-				this._closeListener();
+				this._openListener(resolve);
+				this._closeListener(reject);
 			} catch (error) {
 				return reject(error);
 			}
@@ -56,7 +56,9 @@ export abstract class Socket {
 
 	protected _createSocket(address: string) {
 		const protocol = (this.secured) ? 'wss' : 'ws';
-		return new WebSocket(protocol+'://' + address, this.protocols);
+		const url = protocol+'://' + address;
+
+		return new WebSocket(url, this.protocols);
 	}
 
 	protected _messageListener() {
@@ -73,21 +75,46 @@ export abstract class Socket {
 		});
 	}
 
-	protected _openListener() {
+	protected _openListener(resolve: () => void) {
 		this.$socket.addEventListener('open', () => {
 			this.state = 'open';
 			this.$events.next({ type: 'open' });
+			resolve();
 		});
 	}
 
-	protected _closeListener() {
+	protected _closeListener(reject: (error: any) => void) {
 		this.$socket.addEventListener('close', (event) => {
-			this.$events.next({
-				type: 'close',
-				code: event.code,
-				reason: event.reason,
-				wasClean: event.wasClean,
-			});
+			if (this.state === 'pending') {
+				reject(this._createCloseError(event));
+			} else {
+				this.$events.next({
+					type: 'close',
+					code: event.code,
+					reason: event.reason,
+					wasClean: event.wasClean,
+				});
+			}
+
+			this.state = 'close';
+			this.$socket = null;
 		});
+	}
+
+	protected _createCloseError(event: CloseEvent) {
+		if (event.reason) {
+			return new Error(event.reason);
+		}
+
+		switch (event.code) {
+			case 1006:
+				return new Error((this.state === 'pending')
+					? 'Unable to connect to server'
+					: 'Connection aborted'
+				)
+
+			default:
+				return new Error('unknown socket error');
+		}
 	}
 }

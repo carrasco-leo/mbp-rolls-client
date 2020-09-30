@@ -17,6 +17,7 @@ import { environment } from 'environments/environment';
 import { AppComponent } from './app.component';
 import { AppThemingService, STORAGE } from './app-theming.service';
 import { STREAM_SECURED, STREAM_PROTOCOLS } from './stream';
+import { ConnectionDialogModule } from './connection-dialog';
 
 const MODULES = [
 	CommonModule,
@@ -26,6 +27,7 @@ const MODULES = [
 	MatButtonModule,
 	MatIconModule,
 	MatSlideToggleModule,
+	ConnectionDialogModule,
 ];
 
 @NgModule({

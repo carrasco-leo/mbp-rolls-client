@@ -1,0 +1,19 @@
+//
+// _theming.scss — mbp-rolls-client
+// ~/src/app/connection-dialog
+//
+
+@use '~@angular/material/theming' as ng;
+
+@mixin apply-theme($theme) {
+	$primary: map-get($theme, primary);
+	$accent: map-get($theme, accent);
+	$warn: map-get($theme, warn);
+	$foreground: map-get($theme, foreground);
+	$background: map-get($theme, background);
+	$is-dark: map-get($theme, is-dark);
+
+	.connection-dialog-connecting-spinner {
+		background: ng.mat-color($background, card, 0.66);
+	}
+}

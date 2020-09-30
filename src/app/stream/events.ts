@@ -14,9 +14,9 @@ export interface SocketCloseEvent {
 	wasClean: boolean;
 }
 
-export interface SocketMessageEvent {
+export interface SocketMessageEvent<T = any> {
 	type: 'message';
-	data: any;
+	data: T;
 }
 
 export interface SocketErrorEvent {
@@ -29,4 +29,20 @@ export type SocketEvent =
 	|SocketCloseEvent
 	|SocketMessageEvent
 	|SocketErrorEvent
+	;
+
+export interface StreamWelcomeEvent {
+	type: 'welcome';
+	id: string;
+	users: { [key: string]: string; };
+}
+
+export interface StreamErrorEvent {
+	type: 'error';
+	reason: string;
+}
+
+export type StreamEvent =
+	StreamWelcomeEvent
+	|StreamErrorEvent
 	;

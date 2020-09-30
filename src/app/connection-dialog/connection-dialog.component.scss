@@ -1,0 +1,23 @@
+//
+// connection-dialog.component.scss — mbp-rolls-client
+// ~/src/app/connection-dialog
+//
+
+@use '~@angular/material/core/style/layout-common' as ng;
+
+.connection-dialog-connecting-spinner {
+	z-index: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	visibility: hidden;
+	@include ng.mat-fill;
+
+	.connection-dialog-connecting & {
+		visibility: visible;
+	}
+}
+
+.mat-dialog-container {
+	position: relative;
+}

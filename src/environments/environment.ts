@@ -6,7 +6,7 @@ export const environment = {
 	production: false,
 	stream: {
 		secured: false,
-		protocols: '',
+		protocols: null,
 	},
 };
 

@@ -3,5 +3,8 @@
 // ~/src/app
 //
 
+@use 'connection-dialog/theming' as connectionDialog;
+
 @mixin apply-theme($theme) {
+	@include connectionDialog.apply-theme($theme);
 }
