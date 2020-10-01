@@ -53,6 +53,8 @@ export class AppComponent implements OnInit, OnDestroy {
 			}));
 
 		this._handleAdditions();
+		this._handleEditions();
+		this._handleDeletions();
 	}
 
 	ngOnDestroy() {
@@ -65,8 +67,33 @@ export class AppComponent implements OnInit, OnDestroy {
 	}
 
 	private _handleAdditions() {
-		this.stream.addition
+		return this.stream.addition
 			.pipe(takeUntil(this.ngUnsubscribe))
 			.subscribe((event) => this.history.push(event));
+	}
+
+	private _handleEditions() {
+		return this.stream.edition
+			.pipe(takeUntil(this.ngUnsubscribe))
+			.pipe(tap((event) => this.updated[event.id] = true))
+			.pipe(delay(200))
+			.pipe(tap((event) => delete this.updated[event.id]))
+			.subscribe();
+	}
+
+	private _handleDeletions() {
+		return this.stream.deletion
+			.pipe(takeUntil(this.ngUnsubscribe))
+			.pipe(tap((event) => this.deleted[event.id] = true))
+			.pipe(delay(200))
+			.pipe(tap((event) => {
+				delete this.deleted[event.id];
+				const index = this.history.indexOf(event);
+
+				if (index !== -1) {
+					this.history.splice(index, 1);
+				}
+			}))
+			.subscribe();
 	}
 }

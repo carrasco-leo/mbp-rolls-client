@@ -23,8 +23,8 @@ export const STREAM_PROTOCOLS = new InjectionToken<string|string[]>('stream.prot
 @Injectable({ providedIn: 'root' })
 export class StreamService extends Socket {
 	private $streamEvents = new Subject<StreamEvent>();
-	private $deletion = new Subject<HistoryEvent>();
-	private $edition = new Subject<HistoryEvent>();
+	private $deletion = new Subject<HistoryRollEvent>();
+	private $edition = new Subject<HistoryRollEvent>();
 	private $addition = new Subject<HistoryEvent>();
 	private $rolls = new Map<string, HistoryRollEvent>();
 
