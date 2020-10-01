@@ -1,0 +1,35 @@
+//
+// _dice.scss — mbp-rolls-client
+// ~/src/app
+//
+
+.dice {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 4rem;
+	height: 4rem;
+	font-size: 2.5rem;
+	line-height: 1;
+	border: 3px solid;
+	border-radius: 6px;
+	user-select: none;
+
+	.mat-icon {
+		width: 1em;
+		height: 1em;
+		font-size: inherit;
+	}
+}
+
+.dice-discarded {
+	opacity: 0.25;
+}
+
+.dice-hoverable {
+	cursor: pointer;
+}
+
+.dice-disabled {
+	cursor: not-allowed;
+}

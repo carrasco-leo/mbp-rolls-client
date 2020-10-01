@@ -5,4 +5,5 @@
 
 export * from './events';
 export * from './socket';
+export * from './history-event';
 export * from './stream.service';

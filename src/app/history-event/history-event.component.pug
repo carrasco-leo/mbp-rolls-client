@@ -1,0 +1,35 @@
+//-
+//- history-event.component.pug — mbp-rolls-client
+//- ~/src/app/history-event
+//-
+
+ng-container(*ngIf="event.type !== 'roll'; else rollEventBlock")
+	div.history-roll-event-user {{ rollEvent.date|date:'medium' }}
+	p {{ message }}
+
+ng-template(#rollEventBlock)
+	div.history-roll-event-user
+		| {{ rollEvent.username }}
+		| &mdash; {{ rollEvent.id }}
+		| &mdash; {{ rollEvent.date|date:'medium' }}
+
+	div.history-roll-event-title
+		| Roll of {{ rollEvent.dices }}d6
+		| difficulty {{ rollEvent.difficulty }}
+
+	div.history-roll-event-content
+		div.dice(
+			*ngFor="let value of rollEvent.rolls; index as index",
+			[class.dice-discarded]="rollEvent.discarded[index]",
+			[class.dice-passed]="value >= rollEvent.difficulty",
+			[class.dice-failed]="value === 0",
+			[class.dice-rollable]="!rollEvent.resolved && value === 5",
+			)
+			| {{ value }}
+
+	div.history-roll-event-result
+		span(*ngIf="!rollEvent.resolved; else resolvedEventBlock") Awaiting decision...
+		ng-template(#resolvedEventBlock)
+			span(*ngIf="rollEvent.rolls|sl:rollEvent.difficulty:rollEvent.discarded as sl; else failedBlock")
+				| Successful with {{ sl }} SL
+			ng-template(#failedBlock) Failed

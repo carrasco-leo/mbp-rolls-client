@@ -3,8 +3,43 @@
 // ~/src/app
 //
 
+@use '~@angular/material/theming' as ng;
+
 @use 'connection-dialog/theming' as connectionDialog;
+@use 'history-event/theming' as historyEvent;
 
 @mixin apply-theme($theme) {
+	$primary: map-get($theme, primary);
+	$accent: map-get($theme, accent);
+	$warn: map-get($theme, warn);
+	$foreground: map-get($theme, foreground);
+	$background: map-get($theme, background);
+	$is-dark: map-get($theme, is-dark);
+
 	@include connectionDialog.apply-theme($theme);
+	@include historyEvent.apply-theme($theme);
+
+	.dice-rollable {
+		color: ng.mat-color($accent, 500);
+		border-color: ng.mat-color($accent, 500);
+	}
+
+	.dice-failed {
+		color: ng.mat-color($warn, 500);
+		border-color: ng.mat-color($warn, 500);
+	}
+
+	.dice-passed {
+		color: ng.mat-color(ng.$mat-green, 500);
+		border-color: ng.mat-color(ng.$mat-green, 500);
+	}
+
+	.dice-hoverable:hover {
+		background: ng.mat-color($background, hover);
+	}
+
+	.dice-selected {
+		color: ng.mat-color($primary, 500);
+		border-color: ng.mat-color($primary, 500);
+	}
 }

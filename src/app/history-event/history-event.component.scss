@@ -1,0 +1,58 @@
+//
+// history-event.component.scss — mbp-rolls-client
+// ~/src/app/history-event
+//
+
+@use '~@angular/material/theming' as ng;
+@use '~@angular/material/core/style/layout-common' as common;
+
+.history-event {
+	position: relative;
+	display: block;
+	padding: 0.5rem;
+	border-radius: 4px;
+	@include ng.mat-elevation(2);
+
+	// use ::after to show update/remove events
+	&::after {
+		content: '';
+		pointer-events: none;
+		transition: background 1.5s;
+		@include common.mat-fill;
+	}
+
+	&.updated, &.deleted {
+		&::after {
+			transition-duration: 80ms;
+		}
+	}
+}
+
+.history-status-event {
+	padding-left: 1rem;
+	padding-right: 1rem;
+}
+
+.history-roll-event-user {
+	line-height: 1.5;
+	text-transform: uppercase;
+	font-weight: 500;
+	font-size: 0.75rem;
+}
+
+.history-roll-event-title {
+	margin: 0 0 1rem;
+	text-align: center;
+}
+
+.history-roll-event-content {
+	display: flex;
+	justify-content: center;
+	flex-flow: wrap;
+	gap: 0.5rem;
+}
+
+.history-roll-event-result {
+	margin: 1rem 0 0;
+	text-align: center;
+}
