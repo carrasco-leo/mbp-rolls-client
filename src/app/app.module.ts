@@ -15,6 +15,7 @@ import { AppThemingService, STORAGE } from './app-theming.service';
 import { STREAM_SECURED, STREAM_PROTOCOLS } from './stream';
 import { ConnectionDialogModule } from './connection-dialog';
 import { MaterialModule } from './material';
+import { HistoryEventModule } from './history-event';
 
 const MODULES = [
 	CommonModule,
@@ -22,6 +23,7 @@ const MODULES = [
 	BrowserAnimationsModule,
 	MaterialModule,
 	ConnectionDialogModule,
+	HistoryEventModule,
 ];
 
 @NgModule({

@@ -15,6 +15,7 @@ import { first, filter, map } from 'rxjs/operators';
 
 import { Socket } from './socket';
 import { StreamEvent, StreamWelcomeEvent, SocketMessageEvent } from './events';
+import { HistoryEvent, HistoryRollEvent } from './history-event';
 
 export const STREAM_SECURED = new InjectionToken<boolean>('stream.secured');
 export const STREAM_PROTOCOLS = new InjectionToken<string|string[]>('stream.protocols');
@@ -22,6 +23,11 @@ export const STREAM_PROTOCOLS = new InjectionToken<string|string[]>('stream.prot
 @Injectable({ providedIn: 'root' })
 export class StreamService extends Socket {
 	private $streamEvents = new Subject<StreamEvent>();
+	private $deletion = new Subject<HistoryEvent>();
+	private $edition = new Subject<HistoryEvent>();
+	private $addition = new Subject<HistoryEvent>();
+	private $rolls = new Map<string, HistoryRollEvent>();
+
 	private socketSubscription = this.events.subscribe((event) => {
 		if (event.type === 'message') {
 			this._handleMessage(event.data)
@@ -40,6 +46,9 @@ export class StreamService extends Socket {
 	});
 
 	get streamEvents() { return this.$streamEvents.asObservable(); }
+	get addition() { return this.$addition.asObservable(); }
+	get edition() { return this.$edition.asObservable(); }
+	get deletion() { return this.$deletion.asObservable(); }
 
 	isConnected: boolean = false;
 	users: { [key: string]: string; } = {};
@@ -90,10 +99,19 @@ export class StreamService extends Socket {
 			case 'welcome': break;
 
 			case 'connection':
+				this.$addition.next({
+					...event,
+					date: new Date().toISOString(),
+				});
 				this.users[event.id] = event.username;
 				break;
 
 			case 'disconnection':
+				this.$addition.next({
+					...event,
+					username: this.users[event.id],
+					date: new Date().toISOString(),
+				});
 				delete this.users[event.id];
 				break;
 

@@ -20,11 +20,11 @@
 		transition: background 1.5s;
 		@include common.mat-fill;
 	}
+}
 
-	&.updated, &.deleted {
-		&::after {
-			transition-duration: 80ms;
-		}
+.history-event-updated, .history-event-deleted {
+	&::after {
+		transition: background 80ms;
 	}
 }
 

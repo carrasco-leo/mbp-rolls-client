@@ -16,4 +16,12 @@
 	.history-event {
 		background: ng.mat-color($background, card);
 	}
+
+	.history-event-updated::after {
+		background: ng.mat-color($accent, 500, 0.5);
+	}
+
+	.history-event-deleted::after {
+		background: ng.mat-color($warn, 500, 0.5);
+	}
 }

@@ -4,6 +4,7 @@
 //
 
 @use '~@angular/material/theming' as ng;
+@use 'dice';
 
 .app-toolbar {
 	@include ng.mat-elevation(4);
@@ -51,4 +52,18 @@
 .app-not-connected-actions {
 	margin: 3rem 0 0;
 	text-align: center;
+}
+
+.app-content {
+	flex: auto;
+
+	.history-event + .history-event {
+		margin-top: 1rem;
+	}
+}
+
+.app-disconnect-button {
+	display: block;
+	width: 100%;
+	text-transform: uppercase;
 }

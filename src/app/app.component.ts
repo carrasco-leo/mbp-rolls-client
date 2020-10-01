@@ -13,11 +13,11 @@ import {
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { Subject } from 'rxjs';
-import { takeUntil, map, filter } from 'rxjs/operators';
+import { takeUntil, map, filter, delay, tap } from 'rxjs/operators';
 
 import { AppThemingService } from './app-theming.service';
 import { ConnectionDialog } from './connection-dialog';
-import { StreamService, StreamErrorEvent } from './stream';
+import { StreamService, StreamErrorEvent, HistoryEvent } from './stream';
 
 @Component({
 	selector:            'app-root',
@@ -28,6 +28,10 @@ import { StreamService, StreamErrorEvent } from './stream';
 })
 export class AppComponent implements OnInit, OnDestroy {
 	private ngUnsubscribe = new Subject();
+
+	updated: { [key: string]: boolean; } = {};
+	deleted: { [key: string]: boolean; } = {};
+	history: HistoryEvent[] = [];
 
 	constructor(
 		public theming: AppThemingService,
@@ -47,6 +51,8 @@ export class AppComponent implements OnInit, OnDestroy {
 				duration: 5000,
 				panelClass: 'mat-error',
 			}));
+
+		this._handleAdditions();
 	}
 
 	ngOnDestroy() {
@@ -56,5 +62,11 @@ export class AppComponent implements OnInit, OnDestroy {
 
 	openConnection() {
 		this.connection.open();
+	}
+
+	private _handleAdditions() {
+		this.stream.addition
+			.pipe(takeUntil(this.ngUnsubscribe))
+			.subscribe((event) => this.history.push(event));
 	}
 }
