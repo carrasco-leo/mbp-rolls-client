@@ -16,6 +16,7 @@ import { STREAM_SECURED, STREAM_PROTOCOLS } from './stream';
 import { ConnectionDialogModule } from './connection-dialog';
 import { MaterialModule } from './material';
 import { HistoryEventModule } from './history-event';
+import { UserActionPanelModule } from './user-action-panel';
 
 const MODULES = [
 	CommonModule,
@@ -24,6 +25,7 @@ const MODULES = [
 	MaterialModule,
 	ConnectionDialogModule,
 	HistoryEventModule,
+	UserActionPanelModule,
 ];
 
 @NgModule({

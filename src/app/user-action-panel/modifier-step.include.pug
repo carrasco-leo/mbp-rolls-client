@@ -1,0 +1,33 @@
+//-
+//- modifier-step.include.pug — mbp-rolls-client
+//- ~/src/app/user-action-panel
+//-
+
+div.user-action-panel-text
+	| Discard and increase your dices (+{{ bonus }})
+
+	//- user helper; will be added later
+	//- button(mat-icon-button, color="accent")
+		mat-icon help
+
+div.user-action-panel-rolls
+	dice(
+		*ngFor="let value of rolls; index as index",
+		[value]="value",
+		[difficulty]="difficulty",
+		[discarded]="discards[index]",
+		)
+		| {{ value }}
+
+div.user-action-panel-actions
+	button(mat-button, color="warn")
+		mat-icon delete
+		span Cancel
+
+	button(mat-button)
+		mat-icon refresh
+		span Reset
+
+	button(mat-button)
+		mat-icon arrow_forward
+		span Next

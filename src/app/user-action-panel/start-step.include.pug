@@ -1,0 +1,14 @@
+//-
+//- start-step.include.pug — mbp-rolls-client
+//- ~/src/app/user-action-panel
+//-
+
+div.user-action-panel-rules.
+	Roll #[input(type="number", name="dices", placeholder="#", min="1", [(ngModel)]="dices")]d6
+	difficulty #[input(type="number", name="difficulty", placeholder="#", min="1", [(ngModel)]="difficulty")]
+	with bonus of +#[input(type="number", name="bonus", placeholder="0", min="0", [(ngModel)]="bonus")]
+
+div.user-action-panel-start-action
+	button(mat-button)
+		mat-icon casino
+		span Roll the Dices

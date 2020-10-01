@@ -1,0 +1,25 @@
+//
+// _theming.scss — mbp-rolls-client
+// ~/src/app/user-action-panel
+//
+
+@use '~@angular/material/theming' as ng;
+
+@mixin apply-theme($theme) {
+	$primary: map-get($theme, primary);
+	$accent: map-get($theme, accent);
+	$warn: map-get($theme, warn);
+	$foreground: map-get($theme, foreground);
+	$background: map-get($theme, background);
+	$is-dark: map-get($theme, is-dark);
+
+	.user-action-panel {
+		border-color: ng.mat-color($foreground, divider);
+		background: ng.mat-color($background, card);
+	}
+
+	.user-action-panel-rules input {
+		caret-color: ng.mat-color($primary, 500);
+		color: ng.mat-color($primary, 500);
+	}
+}

@@ -1,0 +1,29 @@
+//-
+//- reroll-step.include.pug — mbp-rolls-client
+//- ~/src/app/user-action-panel
+//-
+
+div.user-action-panel-text Select the dices you want to roll again.
+div.user-action-panel-rolls
+	div.dice(
+		*ngFor="let value of rolls; index as index",
+		[class.dice-rollable]="value === 5",
+		[class.dice-failed]="value === 0",
+		[class.dice-passed]="value >= difficulty",
+		[class.dice-discarded]="discards[index]",
+		[class.dice-hoverable]="value === 5",
+		[class.dice-disabled]="value !== 5",
+		[class.dice-selected]="selected[index]",
+		)
+		ng-container(*ngIf="!selected[index]; else selectedBlock") {{ value }}
+		ng-template(#selectedBlock)
+			mat-icon done
+
+div.user-action-panel-actions
+	button(mat-button, color="warn")
+		mat-icon delete
+		span Cancel
+
+	button(mat-button)
+		mat-icon arrow_forward
+		span Next

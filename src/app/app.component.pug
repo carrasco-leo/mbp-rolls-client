@@ -15,7 +15,7 @@ mat-toolbar.app-toolbar
 		)
 		| Dark Theme
 
-main
+main.app-main
 	ng-container(*ngIf="!stream.isConnected")
 		include not-connected.include.pug
 
@@ -42,3 +42,5 @@ main
 				[class.history-event-updated]="updated[index]",
 				[class.history-event-deleted]="deleted[index]",
 				)
+
+user-action-panel
