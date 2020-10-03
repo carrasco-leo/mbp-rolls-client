@@ -43,4 +43,4 @@ main.app-main
 				[class.history-event-deleted]="deleted[index]",
 				)
 
-user-action-panel
+user-action-panel(*ngIf="stream.isConnected")

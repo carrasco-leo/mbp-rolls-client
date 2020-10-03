@@ -22,4 +22,8 @@
 		caret-color: ng.mat-color($primary, 500);
 		color: ng.mat-color($primary, 500);
 	}
+
+	.user-action-panel-pending {
+		background: ng.mat-color($background, card, 0.8);
+	}
 }

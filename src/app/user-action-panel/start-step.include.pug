@@ -9,6 +9,6 @@ div.user-action-panel-rules.
 	with bonus of +#[input(type="number", name="bonus", placeholder="0", min="0", [(ngModel)]="bonus")]
 
 div.user-action-panel-start-action
-	button(mat-button)
+	button(mat-button, [disabled]="disableStart", (click)="startStep()")
 		mat-icon casino
 		span Roll the Dices

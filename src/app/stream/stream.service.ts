@@ -54,6 +54,7 @@ export class StreamService extends Socket {
 	users: { [key: string]: string; } = {};
 	id: string = null;
 	username: string = null;
+	step: string = 'start';
 
 	constructor(
 		@Optional() @Inject(STREAM_SECURED) secured: boolean,
@@ -94,9 +95,31 @@ export class StreamService extends Socket {
 		this.username = null;
 	}
 
+	startStep(dices: number, difficulty: number, bonus: number) {
+		if (!this.isConnected) {
+			return Promise.reject(new Error('Not connected to a server'));
+		}
+
+		const promise = this.streamEvents
+			.pipe(first((event) => event.type === 'error' || event.type === 'ack'))
+			.toPromise()
+			.then((event) => {
+				if (event.type === 'error') {
+					return Promise.reject(new Error(event.reason));
+				}
+
+				this.step = 'primary-modifiers';
+				return event;
+			})
+
+		this.write({ type: 'start', dices, difficulty, bonus });
+		return promise;
+	}
+
 	protected _handleMessage(event: StreamEvent) {
 		switch (event.type) {
 			case 'welcome': break;
+			case 'ack': break;
 
 			case 'connection':
 				this.$addition.next({
@@ -116,6 +139,14 @@ export class StreamService extends Socket {
 				break;
 
 			case 'error':
+				break;
+
+			case 'roll':
+				this.$addition.next({
+					type: 'roll',
+					username: this.users[event.uid],
+					...event,
+				});
 				break;
 		}
 

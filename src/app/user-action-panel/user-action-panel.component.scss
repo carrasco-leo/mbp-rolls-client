@@ -4,6 +4,7 @@
 //
 
 @use '~@angular/material/theming' as ng;
+@use '~@angular/material/core/style/layout-common' as common;
 
 .user-action-panel {
 	position: relative;
@@ -105,4 +106,12 @@
 	.mat-icon-button {
 		vertical-align: middle;
 	}
+}
+
+.user-action-panel-pending {
+	z-index: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	@include common.mat-fill;
 }

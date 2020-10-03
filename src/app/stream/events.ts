@@ -53,9 +53,28 @@ export interface StreamDisconnectionEvent {
 	id: string;
 }
 
+export interface StreamRollEvent {
+	type: 'roll';
+	id: string;
+	uid: string;
+	date: string;
+	dices: number;
+	difficulty: number;
+	bonus: number;
+	rolls: number[];
+	discarded: number[];
+	resolved: boolean;
+}
+
+export interface StreamAckEvent {
+	type: 'ack';
+}
+
 export type StreamEvent =
 	StreamWelcomeEvent
 	|StreamErrorEvent
 	|StreamConnectionEvent
 	|StreamDisconnectionEvent
+	|StreamRollEvent
+	|StreamAckEvent
 	;
