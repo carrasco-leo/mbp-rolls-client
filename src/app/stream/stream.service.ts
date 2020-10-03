@@ -14,7 +14,7 @@ import { Subject } from 'rxjs';
 import { first, filter, map } from 'rxjs/operators';
 
 import { Socket } from './socket';
-import { StreamEvent, StreamWelcomeEvent, SocketMessageEvent } from './events';
+import { StreamEvent, StreamWelcomeEvent, SocketMessageEvent, StreamAckEvent } from './events';
 import { HistoryEvent, HistoryRollEvent } from './history-event';
 
 export const STREAM_SECURED = new InjectionToken<boolean>('stream.secured');
@@ -111,11 +111,20 @@ export class StreamService extends Socket {
 				}
 
 				this.step = 'primary-modifiers';
-				return event;
+				return event as StreamAckEvent;
 			})
 
 		this.write({ type: 'start', dices, difficulty, bonus });
 		return promise;
+	}
+
+	cancel() {
+		if (!this.isConnected) {
+			return;
+		}
+
+		this.write({ type: 'cancel' });
+		this.step = 'start';
 	}
 
 	protected _handleMessage(event: StreamEvent) {

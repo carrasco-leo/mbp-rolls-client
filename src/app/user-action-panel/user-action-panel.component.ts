@@ -54,6 +54,11 @@ export class UserActionPanelComponent {
 		this.pending = true;
 
 		this.stream.startStep(this.dices, this.difficulty, bonus)
+			.then((event) => {
+				this.rolls = [...event.rolls];
+				this.discards = this.rolls.map(() => 0);
+				this.bonus = bonus;
+			})
 			.catch((error) => this._errorMsg(error))
 			.then(() => this.pending = false)
 	}

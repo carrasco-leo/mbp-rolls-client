@@ -9,5 +9,9 @@ div.user-action-panel-pending(*ngIf="pending")
 ng-container([ngSwitch]="stream.step")
 	ng-container(*ngSwitchCase="'start'")
 		include ./start-step.include.pug
+
+	ng-container(*ngSwitchCase="'primary-modifiers'")
+		include ./modifier-step.include.pug
+
 	div(*ngSwitchDefault)
 		p {{ stream.step }}

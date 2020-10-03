@@ -20,7 +20,7 @@ div.user-action-panel-rolls
 		| {{ value }}
 
 div.user-action-panel-actions
-	button(mat-button, color="warn")
+	button(mat-button, color="warn", (click)="stream.cancel()")
 		mat-icon delete
 		span Cancel
 
