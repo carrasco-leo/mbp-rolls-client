@@ -93,6 +93,8 @@ export class StreamService extends Socket {
 		this.users = {};
 		this.id = null;
 		this.username = null;
+		this.$rolls.clear();
+		this.step = 'start';
 	}
 
 	startStep(dices: number, difficulty: number, bonus: number) {
@@ -120,16 +122,18 @@ export class StreamService extends Socket {
 		switch (event.type) {
 			case 'welcome': break;
 			case 'ack': break;
+			case 'error': break;
 
-			case 'connection':
+			case 'connection': {
 				this.$addition.next({
 					...event,
 					date: new Date().toISOString(),
 				});
 				this.users[event.id] = event.username;
 				break;
+			}
 
-			case 'disconnection':
+			case 'disconnection': {
 				this.$addition.next({
 					...event,
 					username: this.users[event.id],
@@ -137,17 +141,30 @@ export class StreamService extends Socket {
 				});
 				delete this.users[event.id];
 				break;
+			}
 
-			case 'error':
-				break;
-
-			case 'roll':
-				this.$addition.next({
+			case 'roll': {
+				const value: HistoryRollEvent = {
 					type: 'roll',
 					username: this.users[event.uid],
 					...event,
-				});
+				}
+
+				this.$rolls.set(value.id, value);
+				this.$addition.next(value);
 				break;
+			}
+
+			case 'cancel': {
+				const value = this.$rolls.get(event.id);
+				this.$rolls.delete(event.id);
+				console.log('cancel', event.id, value);
+
+				if (value) {
+					this.$deletion.next(value);
+				}
+				break;
+			}
 		}
 
 		this.$streamEvents.next(event);

@@ -70,6 +70,11 @@ export interface StreamAckEvent {
 	type: 'ack';
 }
 
+export interface StreamCancelEvent {
+	type: 'cancel';
+	id: string;
+}
+
 export type StreamEvent =
 	StreamWelcomeEvent
 	|StreamErrorEvent
@@ -77,4 +82,5 @@ export type StreamEvent =
 	|StreamDisconnectionEvent
 	|StreamRollEvent
 	|StreamAckEvent
+	|StreamCancelEvent
 	;

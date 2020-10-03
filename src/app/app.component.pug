@@ -23,7 +23,7 @@ main.app-main
 		div.app-nav-content
 			button.app-disconnect-button(
 				mat-raised-button,
-				(click)="stream.disconnect()",
+				(click)="closeConnection()",
 				)
 				span(mat-line) Disconnect
 				mat-icon power_settings_new
@@ -39,8 +39,8 @@ main.app-main
 			history-event(
 				*ngFor="let event of history; index as index",
 				[event]="event",
-				[class.history-event-updated]="updated[index]",
-				[class.history-event-deleted]="deleted[index]",
+				[class.history-event-updated]="updated[event.id]",
+				[class.history-event-deleted]="deleted[event.id]",
 				)
 
 user-action-panel(*ngIf="stream.isConnected")

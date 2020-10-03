@@ -66,6 +66,11 @@ export class AppComponent implements OnInit, OnDestroy {
 		this.connection.open();
 	}
 
+	closeConnection() {
+		this.stream.disconnect();
+		this.history = [];
+	}
+
 	private _handleAdditions() {
 		return this.stream.addition
 			.pipe(takeUntil(this.ngUnsubscribe))
@@ -86,10 +91,10 @@ export class AppComponent implements OnInit, OnDestroy {
 			.pipe(takeUntil(this.ngUnsubscribe))
 			.pipe(tap((event) => this.deleted[event.id] = true))
 			.pipe(delay(200))
+			.pipe(tap((event) => delete this.deleted[event.id]))
+			.pipe(delay(1000))
 			.pipe(tap((event) => {
-				delete this.deleted[event.id];
 				const index = this.history.indexOf(event);
-
 				if (index !== -1) {
 					this.history.splice(index, 1);
 				}
