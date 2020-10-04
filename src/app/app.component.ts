@@ -45,12 +45,18 @@ export class AppComponent implements OnInit, OnDestroy {
 
 		this.stream.streamEvents
 			.pipe(takeUntil(this.ngUnsubscribe))
-			.pipe(filter(() => this.stream.isConnected))
-			.pipe(filter<StreamErrorEvent>((event) => event.type === 'error'))
-			.subscribe((event) => this.snackBar.open(event.reason, 'Dismiss', {
-				duration: 5000,
-				panelClass: 'mat-error',
-			}));
+			.pipe(filter((event) => this.stream.isConnected || event.type === 'welcome'))
+			.subscribe((event) => {
+				if (event.type === 'error') {
+					this._errorMsg(event.reason);
+				} else if (event.type === 'welcome') {
+					console.log('welcome', event);
+					this.history = event.history.map((value) => {
+						value.type = 'roll';
+						return value;
+					});
+				}
+			});
 
 		this.stream.events
 			.pipe(takeUntil(this.ngUnsubscribe))
@@ -73,6 +79,13 @@ export class AppComponent implements OnInit, OnDestroy {
 
 	closeConnection() {
 		this.stream.disconnect();
+	}
+
+	private _errorMsg(message: string) {
+		return this.snackBar.open(message, 'Dismiss', {
+			duration: 5000,
+			panelClass: 'mat-error',
+		});
 	}
 
 	private _handleAdditions() {

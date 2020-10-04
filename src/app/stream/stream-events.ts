@@ -3,10 +3,13 @@
 // ~/src/app/stream
 //
 
+import { HistoryRollEvent } from './history-event';
+
 export interface StreamWelcomeEvent {
 	type: 'welcome';
 	id: string;
 	users: { [key: string]: string; };
+	history: HistoryRollEvent[];
 }
 
 export interface StreamErrorEvent {
