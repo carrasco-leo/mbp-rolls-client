@@ -58,6 +58,7 @@ export class UserActionPanelComponent {
 			.then((event) => {
 				this.rolls = [...event.rolls];
 				this.discards = this.rolls.map(() => 0);
+				this.prevDiscards = [];
 				this.modifiers = this.rolls.map(() => 0);
 				this.bonusLeft = this.bonus = bonus;
 			})
@@ -93,6 +94,7 @@ export class UserActionPanelComponent {
 				this.rolls = [...event.rolls];
 				this.discards = this.rolls.map(() => 0);
 				this.prevDiscards = [...event.discarded];
+				this.modifiers = this.rolls.map(() => 0);
 				this.bonusLeft = event.bonus;
 			})
 			.catch(() => this.selected = this.rolls.map(() => false))
@@ -113,6 +115,10 @@ export class UserActionPanelComponent {
 	}
 
 	modifyDiscard(index: number, value: number) {
+		if (this.prevDiscards[index]) {
+			return;
+		}
+
 		if (value === 0 && this.discards[index] === 0) {
 			return;
 		} else if (value !== 0 && this.discards[index] !== 0) {
@@ -143,6 +149,10 @@ export class UserActionPanelComponent {
 	}
 
 	toggleSelect(index: number) {
+		if (this.discards[index] || this.rolls[index] !== 5) {
+			return;
+		}
+
 		this.selected[index] = !this.selected[index];
 	}
 

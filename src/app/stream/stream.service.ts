@@ -110,7 +110,8 @@ export class StreamService extends Socket {
 	}
 
 	modifiersStep(modifiers: number[], discarded: number[]) {
-		const promise = this._waitForAck('rerolls');
+		const nextStep = (this.step === 'primary-modifiers') ? 'rerolls' : 'start';
+		const promise = this._waitForAck(nextStep);
 		this.write({ type: 'modifiers', modifiers, discarded });
 		return promise;
 	}

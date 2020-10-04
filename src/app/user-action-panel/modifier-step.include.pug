@@ -15,7 +15,7 @@ div.user-action-panel-rolls
 		*ngFor="let value of rolls; index as index",
 		[value]="value + modifiers[index]",
 		[difficulty]="difficulty",
-		[discarded]="discards[index]",
+		[discarded]="discards[index] || prevDiscards[index]",
 		(modified)="modifyDice(index, $event)",
 		(discarded)="modifyDiscard(index, $event)",
 		)
