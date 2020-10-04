@@ -34,6 +34,7 @@ export class StreamService extends Socket {
 			this._handleMessage(event.data)
 		} else if (event.type === 'close') {
 			this.isConnected = false;
+			this.step = 'start';
 
 			if (!event.wasClean) {
 				const error = this._createCloseError(event.code, event.reason);

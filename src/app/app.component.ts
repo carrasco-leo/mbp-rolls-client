@@ -52,6 +52,11 @@ export class AppComponent implements OnInit, OnDestroy {
 				panelClass: 'mat-error',
 			}));
 
+		this.stream.events
+			.pipe(takeUntil(this.ngUnsubscribe))
+			.pipe(filter((event) => event.type === 'close'))
+			.subscribe(() => this.history = []);
+
 		this._handleAdditions();
 		this._handleEditions();
 		this._handleDeletions();
@@ -68,7 +73,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
 	closeConnection() {
 		this.stream.disconnect();
-		this.history = [];
 	}
 
 	private _handleAdditions() {
