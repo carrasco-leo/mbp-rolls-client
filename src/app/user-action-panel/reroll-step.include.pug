@@ -14,6 +14,7 @@ div.user-action-panel-rolls
 		[class.dice-hoverable]="value === 5",
 		[class.dice-disabled]="value !== 5",
 		[class.dice-selected]="selected[index]",
+		(click)="toggleSelect(index)",
 		)
 		ng-container(*ngIf="!selected[index]; else selectedBlock") {{ value }}
 		ng-template(#selectedBlock)
@@ -24,6 +25,6 @@ div.user-action-panel-actions
 		mat-icon delete
 		span Cancel
 
-	button(mat-button)
+	button(mat-button, (click)="rerollsStep()")
 		mat-icon arrow_forward
 		span Next

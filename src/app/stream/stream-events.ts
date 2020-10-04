@@ -41,6 +41,8 @@ export interface StreamRollEvent {
 export interface StreamAckEvent {
 	type: 'ack';
 	rolls?: number[];
+	discarded?: number[];
+	bonus?: number;
 }
 
 export interface StreamCancelEvent {

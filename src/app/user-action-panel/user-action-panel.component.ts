@@ -31,6 +31,7 @@ export class UserActionPanelComponent {
 	bonus: number;
 	rolls: number[];
 	discards: number[];
+	prevDiscards: number[];
 	modifiers: number[];
 	selected: boolean[];
 	bonusLeft: number;
@@ -69,12 +70,32 @@ export class UserActionPanelComponent {
 			return;
 		}
 
+		this.pending = true;
+
 		this.stream.modifiersStep(this.modifiers, this.discards)
 			.then((event) => {
 				this.rolls = this.rolls.map((value, index) => value + this.modifiers[index]);
 				this.selected = this.rolls.map(() => false);
 			})
 			.catch((error) => this._errorMsg(error))
+			.then(() => this.pending = false)
+	}
+
+	rerollsStep() {
+		if (this.pending) {
+			return;
+		}
+
+		this.pending = true;
+
+		this.stream.rerollsStep(this.selected)
+			.then((event) => {
+				this.rolls = [...event.rolls];
+				this.discards = this.rolls.map(() => 0);
+				this.prevDiscards = [...event.discarded];
+				this.bonusLeft = event.bonus;
+			})
+			.catch(() => this.selected = this.rolls.map(() => false))
 			.then(() => this.pending = false)
 	}
 
@@ -119,6 +140,10 @@ export class UserActionPanelComponent {
 		this.discards = this.discards.map(() => 0);
 		this.modifiers = this.modifiers.map(() => 0);
 		this.bonusLeft = this.bonus;
+	}
+
+	toggleSelect(index: number) {
+		this.selected[index] = !this.selected[index];
 	}
 
 	// errors are already globaly handled

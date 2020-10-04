@@ -115,6 +115,12 @@ export class StreamService extends Socket {
 		return promise;
 	}
 
+	rerollsStep(selected: boolean[]) {
+		const promise = this._waitForAck('last-modifiers');
+		this.write({ type: 'rerolls', selected });
+		return promise;
+	}
+
 	cancel() {
 		if (!this.isConnected) {
 			return;
