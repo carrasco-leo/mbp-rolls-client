@@ -4,7 +4,7 @@
 //-
 
 div.user-action-panel-text
-	| Discard and increase your dices (+{{ bonus }})
+	| Discard and increase your dices (+{{ bonusLeft }})
 
 	//- user helper; will be added later
 	//- button(mat-icon-button, color="accent")
@@ -13,21 +13,23 @@ div.user-action-panel-text
 div.user-action-panel-rolls
 	dice(
 		*ngFor="let value of rolls; index as index",
-		[value]="value",
+		[value]="value + modifiers[index]",
 		[difficulty]="difficulty",
 		[discarded]="discards[index]",
+		(modified)="modifyDice(index, $event)",
+		(discarded)="modifyDiscard(index, $event)",
 		)
-		| {{ value }}
+		| {{ value + modifiers[index] }}
 
 div.user-action-panel-actions
 	button(mat-button, color="warn", (click)="stream.cancel()")
 		mat-icon delete
 		span Cancel
 
-	button(mat-button)
+	button(mat-button, (click)="resetModifiers()")
 		mat-icon refresh
 		span Reset
 
-	button(mat-button)
+	button(mat-button, (click)="modifiersStep()")
 		mat-icon arrow_forward
-		span Next
+		span {{ stream.step === 'primary-modifiers' ? 'Next' : 'Finish' }}

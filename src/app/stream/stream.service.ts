@@ -14,7 +14,8 @@ import { Subject } from 'rxjs';
 import { first, filter, map } from 'rxjs/operators';
 
 import { Socket } from './socket';
-import { StreamEvent, StreamWelcomeEvent, SocketMessageEvent, StreamAckEvent } from './events';
+import { SocketMessageEvent } from './events';
+import { StreamEvent, StreamWelcomeEvent, StreamAckEvent } from './stream-events';
 import { HistoryEvent, HistoryRollEvent } from './history-event';
 
 export const STREAM_SECURED = new InjectionToken<boolean>('stream.secured');
@@ -54,7 +55,7 @@ export class StreamService extends Socket {
 	users: { [key: string]: string; } = {};
 	id: string = null;
 	username: string = null;
-	step: string = 'start';
+	step: 'start'|'primary-modifiers'|'rerolls'|'last-modifiers' = 'start';
 
 	constructor(
 		@Optional() @Inject(STREAM_SECURED) secured: boolean,
@@ -102,19 +103,14 @@ export class StreamService extends Socket {
 			return Promise.reject(new Error('Not connected to a server'));
 		}
 
-		const promise = this.streamEvents
-			.pipe(first((event) => event.type === 'error' || event.type === 'ack'))
-			.toPromise()
-			.then((event) => {
-				if (event.type === 'error') {
-					return Promise.reject(new Error(event.reason));
-				}
-
-				this.step = 'primary-modifiers';
-				return event as StreamAckEvent;
-			})
-
+		const promise = this._waitForAck('primary-modifiers');
 		this.write({ type: 'start', dices, difficulty, bonus });
+		return promise;
+	}
+
+	modifiersStep(modifiers: number[], discarded: number[]) {
+		const promise = this._waitForAck('rerolls');
+		this.write({ type: 'modifiers', modifiers, discarded });
 		return promise;
 	}
 
@@ -125,6 +121,20 @@ export class StreamService extends Socket {
 
 		this.write({ type: 'cancel' });
 		this.step = 'start';
+	}
+
+	protected _waitForAck(nextStep: 'start'|'primary-modifiers'|'rerolls'|'last-modifiers') {
+		return this.streamEvents
+			.pipe(first((event) => event.type === 'error' || event.type === 'ack'))
+			.toPromise()
+			.then((event) => {
+				if (event.type === 'error') {
+					return Promise.reject(new Error(event.reason));
+				}
+
+				this.step = nextStep;
+				return event as StreamAckEvent;
+			})
 	}
 
 	protected _handleMessage(event: StreamEvent) {
@@ -167,12 +177,22 @@ export class StreamService extends Socket {
 			case 'cancel': {
 				const value = this.$rolls.get(event.id);
 				this.$rolls.delete(event.id);
-				console.log('cancel', event.id, value);
 
 				if (value) {
 					this.$deletion.next(value);
 				}
 				break;
+			}
+
+			case 'update': {
+				const value = this.$rolls.get(event.id);
+
+				if (value) {
+					value.rolls = [...event.rolls];
+					value.discarded = [...event.discarded];
+					value.resolved = event.resolved;
+					this.$edition.next(value);
+				}
 			}
 		}
 

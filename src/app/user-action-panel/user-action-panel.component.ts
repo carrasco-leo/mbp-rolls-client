@@ -29,11 +29,11 @@ export class UserActionPanelComponent {
 	dices: number;
 	difficulty: number;
 	bonus: number;
-
 	rolls: number[];
 	discards: number[];
+	modifiers: number[];
 	selected: boolean[];
-
+	bonusLeft: number;
 	pending: boolean = false;
 
 	get disableStart() {
@@ -57,10 +57,68 @@ export class UserActionPanelComponent {
 			.then((event) => {
 				this.rolls = [...event.rolls];
 				this.discards = this.rolls.map(() => 0);
-				this.bonus = bonus;
+				this.modifiers = this.rolls.map(() => 0);
+				this.bonusLeft = this.bonus = bonus;
 			})
 			.catch((error) => this._errorMsg(error))
 			.then(() => this.pending = false)
+	}
+
+	modifiersStep() {
+		if (this.pending) {
+			return;
+		}
+
+		this.stream.modifiersStep(this.modifiers, this.discards)
+			.then((event) => {
+				this.rolls = this.rolls.map((value, index) => value + this.modifiers[index]);
+				this.selected = this.rolls.map(() => false);
+			})
+			.catch((error) => this._errorMsg(error))
+			.then(() => this.pending = false)
+	}
+
+	modifyDice(index: number, value: number) {
+		if (this.modifiers[index] + value < 0) {
+			return;
+		} else if (this.bonusLeft - value < 0) {
+			return;
+		} else if (this.discards[index]) {
+			return;
+		}
+
+		this.modifiers[index] += value;
+		this.bonusLeft -= value;
+	}
+
+	modifyDiscard(index: number, value: number) {
+		if (value === 0 && this.discards[index] === 0) {
+			return;
+		} else if (value !== 0 && this.discards[index] !== 0) {
+			return;
+		}
+
+		if (value === 0) {
+			if (this.discards[index] === 0 || this.bonusLeft < this.discards[index]) {
+				return;
+			}
+
+			this.bonusLeft -= this.discards[index];
+			this.discards[index] = 0;
+		} else {
+			if (this.discards[index] !== 0) {
+				return;
+			}
+
+			this.bonusLeft += value;
+			this.discards[index] = value;
+		}
+	}
+
+	resetModifiers() {
+		this.discards = this.discards.map(() => 0);
+		this.modifiers = this.modifiers.map(() => 0);
+		this.bonusLeft = this.bonus;
 	}
 
 	// errors are already globaly handled

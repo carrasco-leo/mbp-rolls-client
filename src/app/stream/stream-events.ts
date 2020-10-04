@@ -48,6 +48,14 @@ export interface StreamCancelEvent {
 	id: string;
 }
 
+export interface StreamUpdateEvent {
+	type: 'update';
+	id: string;
+	rolls: number[];
+	discarded: number[];
+	resolved: boolean;
+}
+
 export type StreamEvent =
 	StreamWelcomeEvent
 	|StreamErrorEvent
@@ -56,4 +64,5 @@ export type StreamEvent =
 	|StreamRollEvent
 	|StreamAckEvent
 	|StreamCancelEvent
+	|StreamUpdateEvent
 	;
